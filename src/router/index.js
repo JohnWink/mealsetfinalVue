@@ -1,14 +1,16 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    name: "guestPage",
+    component:()=>
+      import("../views/GuestPage.vue")
+    
   },
   {
     path: "/about",
@@ -18,7 +20,34 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
+  },
+  {
+    path:"/landingPage",
+    name:"landingPage",
+    component:()=>
+    import("../views/LandingPage.vue")
+  },
+
+  {
+    path:"/restaurant/:id",
+    name: "restaurant",
+    component:() =>
+      import("../views/RestaurantPage.vue")
+  },
+  {
+    path:"/userRestaurantPage",
+    name:"userRestaurantPage",
+    component:()=>
+      import("../views/UserRestaurantPage.vue")
+  },
+
+  {
+    path:"/notificationPage",
+    name:"notificationPage",
+    component:()=>
+      import("../views/NotificationPage.vue")
+  },
+
 ];
 
 const router = new VueRouter({
