@@ -1,12 +1,21 @@
 import { shallowMount } from "@vue/test-utils";
-import HelloWorld from "@/components/HelloWorld.vue";
+import registration from "@/components/registration.vue";
+import login from "@/components/login.vue"
 
-describe("HelloWorld.vue", () => {
-  it("renders props.msg when passed", () => {
-    const msg = "new message";
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
-    });
-    expect(wrapper.text()).toMatch(msg);
+describe("registration.vue", () => {
+  it("renders registration", () => {
+    //const username = "luis";
+    const wrapper = shallowMount(registration);
+    expect(wrapper.exists()).toBe(true);
+  });
+
+ 
+});
+
+describe("login.vue", () => {
+  it("renders login", () => {
+    //const username = "luis";
+    const wrapper = shallowMount(login);
+    expect(wrapper.exists()).toBe(true);
   });
 });
