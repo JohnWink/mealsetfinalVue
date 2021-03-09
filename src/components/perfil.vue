@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <v-img
               class="avatar"
-              :src="loggedUser.avatar"
+              :src="avatar"
               width="80"
               height="80"
               v-on="on"
@@ -156,7 +156,7 @@ export default {
     alter: false,   
     show: true,
     loggedUser:[],
-
+    avatar:"",
     //rules for old and newpassword, 
 
     
@@ -168,7 +168,14 @@ export default {
    async submit(){
       //aply the change of the information, in this case profle
       //first check if avatar are emphty , if emphty  it will send the old one
-      
+       this.$fire({
+                title:"Atualizando Perfil",
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showCancelButton: false,
+                showConfirmButton:false,         
+               })
+              
    
     
       if (this.$refs.form.validate()){
@@ -220,6 +227,7 @@ export default {
         if(this.newPassword != "" || this.oldPassword !=""){
                if(this.newPassword != "" &&  this.oldPassword !=""){
             
+            console.log("new password request")
             await this.$store.dispatch("newPassword",{
                 idUser: this.loggedUser.idUser,
                 password:this.oldPassword,
@@ -251,7 +259,10 @@ export default {
                     type: "error",
                     title: "Erro",          
                     text: 'Para alterar a password por favor preencha a password atual e nova password ',
-              })
+              }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            });
           }
 
 
@@ -259,7 +270,7 @@ export default {
         }
 
           //Overall update
-          
+          /*
         await this.$store.dispatch("userUpdate",{
             idUser:this.loggedUser.idUser,
             diet:this.loggedUser.diet,
@@ -283,16 +294,16 @@ export default {
             console.log("Error", error)
             message="erro interno"
         })
-       
+       */
        if(message == "success"){
                   this.$fire({
                     type: "success",
                     title: "Prefil Editado!",  
                     confirmButtonText:"Confirmar"        
-                 },
-                 function(){  
-                   this.update()
-                 })
+                 }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            });
 
                      // change the buttons disabled values
 
@@ -304,15 +315,19 @@ export default {
                     title: "Prefil Editado!", 
                     text:"A confirmação da password foi enviada para o seu email",
                     confirmButtonText:"Confirmar"       
-                 },function(){  
-                   this.update()
-                 })
+                    }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            });
         }else{
                   this.$fire({
                     type: "error",
                     title: "Oops!!",          
                     text: message,
-                 })
+                 }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            });
             }
 
         
@@ -343,6 +358,17 @@ export default {
   created() {
       
     this.loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"))
+
+    if(this.loggedUser.avatar == null){
+       this.avatar = "https://utulsa.edu/wp-content/uploads/2018/08/generic-avatar.jpg"
+      
+      console.log("picking logged user avatar")
+    }else{
+   this.avatar= this.loggedUser.avatar
+     console.log("picking default  avatar")
+    }
+    
+    
 
     this.email = this.$store.state.loggedUser.email
 

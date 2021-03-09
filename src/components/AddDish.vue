@@ -67,14 +67,16 @@
           label="Tipo de Prato"
           required
         ></v-select>
-
+-->   
         <v-checkbox
           v-model="recommended" 
           required       
-          label="Prato para as Recomendaçôes"        
+          label="Prato para as Recomendaçôes"   
+          true-value = 1
+          false-value = 0     
         ></v-checkbox>
 
--->   
+
 
       <v-btn color="green lighten" class="white--text" large rounded @click="submit">Adicionar Restaurante</v-btn>
      
@@ -109,7 +111,7 @@ data: () => ({
     price: 0,
     //tag:"",
    // tagSlc:['Carne', 'Peixe', 'Vegetariano', 'Sobremesa'],
-    recommended: false,
+    recommended: 0,
     
 
     //----------- dish submition rules----------------
@@ -163,6 +165,7 @@ methods: {
             name: this.name,
             description: this.description,
             price:this.price,
+            recommended:this.recommended,
             idRestaurant: loggedUser.idRestaurant
         }).then(async()=>{
 

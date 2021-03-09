@@ -9,7 +9,7 @@
                             <v-img  :src="user.avatar"
                                 alt="user"/>
                         </v-avatar>                
-                        <span class="pl-2"><b>{{user.name}}  </b>{{rating.dateTime}}</span>
+                        <span class="pl-2"><b>{{user.name}}  </b>{{commentDate}}</span>
                     </v-col>
 
                     <!--method to calculate and print the rate stars and empthy stars-->
@@ -41,7 +41,8 @@ export default {
   name: "commentReview",
   data: () => ({      
       checker:"border: solid indigo",
-      user:[] 
+      user:[],
+      commentDate:""
 
 
     }),
@@ -69,18 +70,36 @@ export default {
    
 
     async created(){
-           await this.$store.dispatch("getUser",{
+        await this.$store.dispatch("getUser",{
                 
-                idUser: this.rating.idUser
+            idUser: this.rating.idUser
 
-                }).then(()=>{
+            }).then(()=>{
 
-                this.user = this.$store.getters.getUserDetails
-               
+            this.user = this.$store.getters.getUserDetails
+
                 
-            }).catch((error)=>{
+
+
+                
+        }).catch((error)=>{
                 console.log("Error in getting a user in comments:", error)
-            })
+        })
+
+        console.log(this.rating.datetime)
+        //var t = this.rating.dateTime.split(/[- :]/)
+        
+        let date = new Date(this.rating.dateTime)
+
+        var dd = date.getDate();
+        var mm = date.getMonth()+1; //As January is 0.
+        var yyyy = date.getFullYear();
+
+        if(dd<10) dd='0'+dd;
+        if(mm<10) mm='0'+mm;
+
+        this.commentDate = `- ${dd}/${mm}/${yyyy} às ${date.getHours()}:${date.getMinutes()}`
+
     }
 };
 </script>

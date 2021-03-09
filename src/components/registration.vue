@@ -68,17 +68,7 @@
           color="#5C6BC0"
         ></v-text-field>
 
-        <!--ZipCode-->
-        <v-text-field
-          prepend-icon="fas fa-thumbtack"
-          v-model="zipCode"
-          :counter="10"
-          :rules="zipCodeRules"
-          label="Código-Postal"
-          required
-          clearable
-          color="#5C6BC0"
-        ></v-text-field>
+      
 
         <!--Imagem de perfil-->
          <v-file-input
@@ -219,7 +209,7 @@ export default {
     email: "",
     userAvatar:[],
     userType: "",
-    zipCode: 0,
+    //zipCode: 0,
     id: 0,
   
     
@@ -250,10 +240,7 @@ export default {
       v => (v && v.length <= 20) || "Tem de ter menos de 20 caracteres"
     ],
 
-    zipCodeRules:[
-        v=> !!v || "Por favor preencha o código-postal",
-
-    ],
+  
 
     restaurantZipCodeRules:[
       v => !!v || "Por favor preencha o código-postal"
@@ -335,7 +322,7 @@ export default {
                 password: this.password,
                 email : this.email,
                 contact:this.contact,
-                zipCode:this.zipCode,
+                //zipCode:this.zipCode,
                 idRestaurant: lastRestaurantId,
                 userType: userTypeInfo
 
@@ -370,38 +357,53 @@ export default {
                           type: "success",
                           title: 'Registado! e Avatar enviado!',
                           text: 'Um link foi enviado para o seu email para ativar a sua conta',
-                          })
-                          this.$refs.form.reset()
+                          }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                          //this.$refs.form.reset()
 
                         }else if(response == 404){
                           this.$fire({
                           type: "error",
                           title: 'Oops...!',
                           text: 'O utilizador não foi encontrado ',
-                          })
-                          this.$refs.form.reset()
+                          }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                          //this.$refs.form.reset()
                         }else if(response == 400){
                           this.$fire({
                           type: "error",
                           title: 'Oops...!',
                           text: 'A imagem não é válida',
-                           })
-                           this.$refs.form.reset()
+                           }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                           //this.$refs.form.reset()
                         }else if(response == 409){
 
                           this.$fire({
                           type: "error",
                           title: 'Conflito',
                           text: 'O nome do utilizador ou email já está a ser utilizado',
-                          })
-                          this.$refs.form.reset()
+                          }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                          //this.$refs.form.reset()
 
                         }else{
                           this.$fire({
                           type: "error",
                           title: 'Oops!',
                           text: 'Ocorreu um erro',
-                          })
+                          }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
                         }
                       })
 
@@ -412,8 +414,11 @@ export default {
                           type: "success",
                           title: 'Registado!',
                           text: 'Um link foi enviado para o seu email para ativar a sua conta',
-                          })
-                          this.$refs.form.reset()
+                          }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                          //this.$refs.form.reset()
                   }
                 
                 }else if(response ==409){
@@ -421,19 +426,32 @@ export default {
                   type: "error",
                   title: 'Oops...!',
                   text: 'O username ou email já existe ',
-                })
-                this.$refs.form.reset()
+                }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                //this.$refs.form.reset()
                 }else{
                   this.$fire({
                   type: "error",
                   title: 'Oops...!',
                   text: 'Algo deu errado',
-                })
-                this.$refs.form.reset()
+                }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                //this.$refs.form.reset()
                 }
 
-              }).catch(function(error){
+              }).catch((error)=>{
                 console.log(error)
+                /*
+                 this.$fire({
+                  type: "error",
+                  title: 'Oops...!',
+                  text: 'Algo deu errado',
+                })
+                */
               })
 
               //this.$store.state.feedback = "";
@@ -444,7 +462,7 @@ export default {
   
     async signUp() {
       if(this.$refs.form.validate()){
-
+         this.dialog = false
         // If Client SignUp
           if(this.checkbox === false){
 
@@ -569,27 +587,42 @@ export default {
                           type: "error",
                           title: 'Oops...!',
                           text: 'O restaurante não foi encontrado ',
-                          })
+                          }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
                           this.$refs.form.reset()
                         }else if(response == 400){
                           this.$fire({
                           type: "error",
                           title: 'Oops...!',
                           text: 'A imagem não é válida',
-                           })
+                           }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
                            this.$refs.form.reset()
                         }else{
                           this.$fire({
                           type: "error",
                           title: 'Oops!',
                           text: 'Ocorreu um erro',
-                          })
+                          }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
                         }
 
 
 
                   }).catch((error)=>{
-
+                    /*
+                     this.$fire({
+                  type: "error",
+                  title: 'Oops...!',
+                  text: 'Algo deu errado',
+                })
+                */
                     console.log(error)
                   })
                 }else{
@@ -597,16 +630,28 @@ export default {
                   type: "error",
                   title: 'Oops...!',
                   text: 'Algo deu errado',
-                })
-                this.$refs.form.reset()
+                }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                //this.$refs.form.reset()
                 }
 
 
 
                }).catch((error)=>{
+                 /*
+                  this.$fire({
+                  type: "error",
+                  title: 'Oops...!',
+                  text: 'Algo deu errado',
+                })
+                */
                 console.log(error)
               })
           }
+          this.$refs.form.reset()
+
       }
 
               this.$store.state.lastRestaurantId = ""

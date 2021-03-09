@@ -42,7 +42,7 @@
             </v-tooltip>
           </router-link>
         </div>
-
+<!--
         <div v-if="this.restauView == false">
           <router-link to="/DishesPage">
             <v-tooltip  right>
@@ -78,7 +78,7 @@
             </v-tooltip>
           </router-link>
         </div>
-
+-->
         <!--------UserRestanrant page-->
         <div v-if="this.restauView == true">
           <router-link to="/userRestaurantPage" >
@@ -126,10 +126,10 @@
                       <v-icon :color="messages" large>mdi-email</v-icon>
                       
                   </v-list-item-icon>
-                  <v-list-item-title>Manager de Reservas e Pratos</v-list-item-title>
+                  <v-list-item-title>Notificações</v-list-item-title>
                 </v-list-item>
               </template>
-              <span>Manager de Reservas e Pratos</span>
+              <span>Notificações</span>
             </v-tooltip>
           </router-link>
         </div>

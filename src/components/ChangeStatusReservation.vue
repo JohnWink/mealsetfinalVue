@@ -96,11 +96,21 @@ methods: {
         this.dialog=false
         let noteText = this.notificationText        
         let setDate = new Date()
+
+        var dd = setDate.getDate();
+        var mm = setDate.getMonth()+1; //As January is 0.
+        var yyyy = setDate.getFullYear();
+
+        if(dd<10) dd='0'+dd;
+        if(mm<10) mm='0'+mm;
+
        
-        let postDate = setDate.getFullYear() + "-" +setDate.getMonth() +"-"+setDate.getDay() +"  "+ setDate.getHours()+ ":" + setDate.getMinutes() + ":" + setDate.getSeconds()
+        let postDate = yyyy + "-" + mm +"-"+ dd +"  "+ setDate.getHours()+ ":" + setDate.getMinutes() + ":" + setDate.getSeconds()
         //conditions for the status change , if true then it will go to the storage and change that data
         //also making sure that if we are changing a status true to true again, not to send to the historic again 
         //let statusValue =""
+        console.log("current date: ", postDate)
+
         let response
         let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"))
 
@@ -113,7 +123,7 @@ methods: {
 
              await this.$store.dispatch("confirm_reservation",{
                 id: this.selected.idReservation,            
-                status: 1
+                status: "Reserva Confirmada"
               }).then(async()=>{
                   response = this.$store.getters.feedbackChecker
                    //sending the notification
@@ -121,7 +131,7 @@ methods: {
                      await this.$store.dispatch("add_notification",{
                     idUser: this.selected.idUser,
                     idRestaurant: loggedUser.idRestaurant,
-                    status: 1,
+                    status: "Reserva Confirmada",
                     message: noteText,
                     dateTime: postDate,
                     }).then(()=>{
@@ -196,7 +206,7 @@ methods: {
 
               await this.$store.dispatch("confirm_reservation",{
                 id: this.selected.idReservation ,
-                status: 0
+                status: "Reserva Recusada"
               }).then(async()=>{
                    response = this.$store.getters.feedbackChecker
                    if(response == 200){
@@ -205,9 +215,9 @@ methods: {
                     await this.$store.dispatch("add_notification",{
                         idUser: this.selected.idUser,
                         idRestaurant: loggedUser.idRestaurant,
-                        status: 0,
+                        status:"Reserva Recusada",
                         message: noteText,
-                        date: postDate,
+                        dateTime: postDate,
                     }).then(()=>{
                         response = this.$store.getters.feedbackChecker
                         if(response == 201){
@@ -277,7 +287,7 @@ methods: {
            
               await this.$store.dispatch("confirm_reservation",{
                 id: this.selected.idReservation ,
-                status: 0
+                status:"Reserva Confirmada"
               }).then(async()=>{
                    response = this.$store.getters.feedbackChecker
                    if(response == 200){
@@ -286,7 +296,7 @@ methods: {
                     await this.$store.dispatch("add_notification",{
                         idUser: this.selected.idUser,
                         idRestaurant: loggedUser.idRestaurant,
-                        status: 0,
+                        status: "Reserva Confirmada",
                         message: noteText,
                         date: postDate,
                     }).then(()=>{

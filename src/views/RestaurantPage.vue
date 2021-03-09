@@ -102,7 +102,7 @@
     <v-container >      
       <v-row class="pl-9 ml-9 py-2" justify="space-between" align="center" >
         <v-col cols="12" sm="5">
-          <div>
+          <div v-if="recommendedDishes==true">
           <p class=" headline font-weight-bold " >Pratos Recomendados</p><br>
           </div>
         </v-col>
@@ -133,13 +133,13 @@
 
           </v-col>    
         </v-row>
-        <div>
+        <div v-if="recommendedDishes==true">
         <v-row  class="pl-9 ml-9 py-6" justify="center" >
           <v-col cols="10" > 
             <!--RECOMENDAÇÃO DE PRATOS-->
             <v-carousel  hide-delimiters :height="this.compHeight">
-              <div v-for="dish in menu" :key="dish.idPlate">
-                <v-carousel-item>
+              <div v-for="dish in menu" :key="dish.idDish">
+                <v-carousel-item v-if="dish.recommended === 1">
                   <RestaurantCards v-bind:dish="dish" />
                 </v-carousel-item>
               </div>
@@ -163,7 +163,7 @@
               </v-col>
               <v-col cols="2" sm="1" class=" title font-weight-bold" >
                   <v-icon medium color="yellow darken-1">fas fa-star</v-icon>
-                  {{restaurant.evaluation}}/5 <!-- Will need to turn this in to a {{Totalrate}}-->
+                  {{ratingAvg}}/5 <!-- Will need to turn this in to a {{Totalrate}}-->
               </v-col>  
 
           </v-row>
@@ -245,7 +245,9 @@ export default {
       ratings:[],
       menuCount: 0,
       center:{lat:-34.397, lng:150.644},
-      position:{lat:-34.397, lng:150.644}
+      position:{lat:-34.397, lng:150.644},
+      ratingAvg : 0,
+      recommendedDishes: false
       
   }),
 
@@ -446,16 +448,25 @@ export default {
 
     //this.restaurants  = this.$store.getters.getRestaurants;
 
-
+    let response = this.$store.getters.feedbackChecker
     console.log("Params router id: ", this.$route.params.id)
 
     this.$store.dispatch("get_restaurant_dishes",{
       idRestaurant: this.$route.params.id
     }).then(()=>{
 
-      //let response = this.$store.getters.feedbackChecker
-      this.menu = this.$store.getters.getRestaurantDishes;
-      
+
+      if(response == 200){
+           //let response = this.$store.getters.feedbackChecker
+          this.menu = this.$store.getters.getRestaurantDishes;
+
+         this.menu.forEach(dish=>{
+        if(dish.recommended == 1){
+          this.recommendedDishes = true
+        }
+         })
+      }
+   
     }).catch((error)=>{
        console.log(error)
 
@@ -491,14 +502,21 @@ export default {
   },
 
  async beforeMount() {
-
+ 
     await  this.$store.dispatch('getRestaurantRatings',{
       idRestaurant: this.$route.params.id
     }).then(()=>{
         let response = this.$store.getters.feedbackChecker
         console.log("get restaurant ratings response status:", response)
+
         if(response == 200){
-          this.ratings= this.$store.getters.getRatings;
+          this.ratings= this.$store.getters.getRestaurantRatings;
+
+          for(let i = 0; i < this.ratings.length; i++){
+            this.ratingAvg += this.ratings[i].rating
+          }
+
+          this.ratingAvg = this.ratingAvg/ this.ratings.length
         }
         
 

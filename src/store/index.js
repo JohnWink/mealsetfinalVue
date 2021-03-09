@@ -13,7 +13,7 @@ export default new Vuex.Store({
     
     users:[],
     restaurants:[],
-    ratings:[],
+    restaurantRatings:[],
     feedback:'',
 
     loggedUser:{
@@ -153,7 +153,7 @@ export default new Vuex.Store({
       
    },
 
-   CREATE_RATINGS(state,payload){
+   CREATE_RESTAURANT_RATINGS(state,payload){
 
      let result = payload[0]
 
@@ -163,13 +163,13 @@ export default new Vuex.Store({
       ratings.push({
         idRestaurant:result[i].idRestaurante,
         idUser:result[i].idCliente,
-        rating:result[i].value,
+        rating:result[i].rating,
         comment:result[i].Comentário,
         dateTime:result[i].data_hora,
       })
      }
 
-     state.ratings = ratings
+     state.restaurantRatings = ratings
    },
 
    CREATE_USERDETAILS(state,payload){
@@ -260,6 +260,7 @@ export default new Vuex.Store({
         description: result[i].descrição,
         price: result[i].preço,
         foto: result[i].foto,
+        recommended:result[i].recomendado,
         idRestaurant: result[i].idRestaurante,
       })
     }
@@ -292,6 +293,25 @@ export default new Vuex.Store({
      }
 
      state.userNotifications = notifications
+   },
+
+   CREATE_RATINGS(state,payload){
+    let result = payload
+
+    console.log("ratings result: ", result)
+    let ratings = []
+
+     for(let i = 0; i < result.length; i++){
+      ratings.push({
+        idRestaurant:result[i].idRestaurante,
+        idUser:result[i].idCliente,
+        value:result[i].rating
+      })
+     }
+
+     state.ratings = ratings
+
+     sessionStorage.setItem("ratings", JSON.stringify(state.ratings))
    }
 
    
@@ -318,7 +338,7 @@ export default new Vuex.Store({
       params.append('password',payload.password);
       params.append('email', payload.email);
       params.append('contact',payload.contact);
-      params.append('zipCode',payload.zipCode);
+     // params.append('zipCode',payload.zipCode);
       params.append('userType',payload.userType);
 
       
@@ -389,7 +409,8 @@ export default new Vuex.Store({
       commit("CREATE_LOGGED_USER", response.data)
 
       }).catch((error)=>{
-        console.log("error", error.response)
+
+        console.log("error in logging in", error.response)
         commit("CREATE_FEEDBACK",error.response.status)
       })
 
@@ -428,7 +449,7 @@ export default new Vuex.Store({
       params.append('newPassword', payload.newPassword);
 
       
-      await axios.put(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/users/${payload.idUser}`,params).then((response)=>{
+      await axios.put(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/users/${payload.idUser}/newPassword`,params).then((response)=>{
 
         console.log("Response:" ,response.status)
         console.log("Data:", response.data.success)
@@ -466,6 +487,7 @@ export default new Vuex.Store({
 
       }).catch((error)=>{
         console.log("error in restaurant add", error.response)
+        commit("CREATE_FEEDBACK", error.response.status)
       })
 
     },
@@ -495,6 +517,7 @@ export default new Vuex.Store({
 
       }).catch((error)=>{
         console.log("Error in restaurant images:", error.response)
+        commit("CREATE_FEEDBACK", error.response.status)
 
       })
     },
@@ -514,6 +537,7 @@ export default new Vuex.Store({
       }).catch((error)=>{
 
         console.log("Error in getting restaurants:", error)
+        commit("CREATE_FEEDBACK", error.response.status)
 
       })
     },
@@ -529,11 +553,13 @@ export default new Vuex.Store({
       }).then((response)=>{
 
         console.log("Get Ratings result: ", response.data.success)
-        commit("CREATE_RATINGS",response.data.success)
+        commit("CREATE_RESTAURANT_RATINGS",response.data.success)
+        commit("CREATE_FEEDBACK",response.status)
 
       }).catch((error)=>{
 
         console.log("Error in getting restaurants:", error)
+        commit("CREATE_FEEDBACK", error.response.status)
 
       })
     },
@@ -556,6 +582,7 @@ export default new Vuex.Store({
       }).catch((error)=>{
 
         console.log("Error in getting a user:", error)
+        commit("CREATE_FEEDBACK", error.response.status)
 
       })
     },
@@ -732,6 +759,7 @@ export default new Vuex.Store({
     params.append('name',payload.name)
     params.append('description',payload.description)
     params.append('price',payload.price)
+    params.append('recommended', payload.recommended)
 
     await axios.post(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${payload.idRestaurant}/plates`, params).then((response)=>{
           
@@ -767,6 +795,7 @@ export default new Vuex.Store({
 
       }).catch((error)=>{
         console.log("Error in avatar:", error.response)
+        commit("CREATE_FEEDBACK", error.response.status)
       })
   },
   
@@ -794,6 +823,7 @@ export default new Vuex.Store({
 
       }).catch((error)=>{
         console.log("Error in restaurant images:", error.response)
+        commit("CREATE_FEEDBACK", error.response.status)
 
       })
   },
@@ -821,6 +851,7 @@ export default new Vuex.Store({
 
     }).catch((error)=>{
       console.log("Error in restaurant images:", error.response)
+      commit("CREATE_FEEDBACK", error.response.status)
 
     })
   },
@@ -842,8 +873,8 @@ export default new Vuex.Store({
       
     }).catch((error)=>{
 
-    commit("CREATE_FEEDBACK",error.response)
-
+   
+    commit("CREATE_FEEDBACK", error.response.status)
     console.log("Error in getting a user:", error)
     })
   },
@@ -868,7 +899,7 @@ export default new Vuex.Store({
     }).catch((error)=>{
 
     commit("CREATE_FEEDBACK",error.response)
-
+    commit("CREATE_FEEDBACK", error.response.status)
     console.log("Error in getting notifications:", error)
     })
   },
@@ -885,10 +916,26 @@ export default new Vuex.Store({
       
     }).catch((error)=>{
 
-    commit("CREATE_FEEDBACK",error.response)
 
+    commit("CREATE_FEEDBACK", error.response.status)
     console.log("Error in getting a user:", error)
     })
+  },
+
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Get Ratings+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  async get_ratings({commit}){
+    await axios.get(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/ratings`).then((response)=>{
+      
+      commit("CREATE_FEEDBACK",response.status)
+  
+      commit("CREATE_RATINGS", response.data.success)
+        
+      }).catch((error)=>{
+  
+     
+      commit("CREATE_FEEDBACK", error.response.status)
+      console.log("Error in getting ratings:", error)
+      })
   }
 },
 
@@ -909,7 +956,7 @@ export default new Vuex.Store({
 
     getRestaurants:state=>state.restaurants,
 
-    getRatings:state=>state.ratings,
+    getRestaurantRatings:state=>state.restaurantRatings,
 
     getUserDetails:state=>state.userDetails,
    
@@ -921,7 +968,9 @@ export default new Vuex.Store({
 
     getLastDishId:state=>state.lastDishId,
 
-    getUserNotifications:state=>state.userNotifications
+    getUserNotifications:state=>state.userNotifications,
+
+    getRatings:state=>state.ratings
   },
 
   modules: {}

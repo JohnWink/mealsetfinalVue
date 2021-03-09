@@ -1,4 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
+
 import registration from "@/components/registration.vue";
 import login from "@/components/login.vue"
 

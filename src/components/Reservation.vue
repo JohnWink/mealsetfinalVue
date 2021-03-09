@@ -98,13 +98,11 @@
               v-model="fromDateVal"
               no-title
             ></v-date-picker>
-
              <v-time-picker
             v-model="time"
             :allowed-minutes="allowedStep"
-            class="mt-4"
-          
-              
+             width="290"
+
             ></v-time-picker>
             
             <v-btn color="#f7c23e" dark @click="fromDateMenu = false">confirmar</v-btn>
@@ -112,6 +110,7 @@
   
           </v-menu>
         </v-layout>
+        
 
         <!--  Someday....
         <v-file-input

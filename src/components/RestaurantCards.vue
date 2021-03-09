@@ -12,10 +12,12 @@
           <v-row class="mb-7 mx-2">
             <v-col cols="12" class="text-left">
               <v-title class=" font-weight-bold nameTitle" >{{ restaurant.name }}</v-title>
-
+            
               <br> <i class="fas fa-edit mt-3"></i> {{restaurant.description}} 
+              <!--
               <p>{{restaurant.travelDuration}}</p>
               <p>{{Math.round(restaurant.distance/100)/10 + " km"}}</p>
+              -->
               <!--
               <p class="ps">
                 <i class="fas fa-map-marker-alt" ></i>
@@ -28,7 +30,7 @@
             </v-col>
             <v-col class="text-right">
               <p style="margin-right: 25px; margin-top: 10%" class="font-weight-bold">
-                {{ restaurant.evaluation }}
+                {{ ratingAvg }}
                 <v-icon medium color="yellow darken-1">fas fa-star</v-icon>
               </p>
             </v-col>
@@ -94,8 +96,9 @@ export default {
     travelDuration:'',
     map:"",
     myPos:'',
-    distanceValue:''
- 
+    distanceValue:'',
+    ratingAvg: 0
+
   }),
 
   methods:{
@@ -147,8 +150,32 @@ export default {
 
   mounted(){
     //this.calcDistance()
+    let ratings = JSON.parse(sessionStorage.getItem("ratings"))
+
+    let restaurantRatings = []
+
+    console.log("restaurant ratings: ", restaurantRatings)
+    
+    ratings.find((rating)=>{
+      if(rating.idRestaurant == this.restaurant.idRestaurant){
+        restaurantRatings.push(rating)
+      }
+    })
+
+    for(let i = 0; i < restaurantRatings.length ; i++){
+      this.ratingAvg=+ restaurantRatings[i].value
+    }
+
+    if(!this.ratingAvg){
+      this.ratingAvg = 0
+    }else{
+      this.ratingAvg = this.ratingAvg/restaurantRatings.length
+    }
    
-  }
+   
+  },
+ 
+
   
 
 };

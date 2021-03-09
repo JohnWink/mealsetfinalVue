@@ -110,7 +110,7 @@ export default {
             statusStr: "",
             headersMessage: [
                 
-                { text: 'Restaurante', value: 'idRestaurant',align: 'start' },
+                { text: 'Restaurante', value: 'restaurantName',align: 'start' },
                 { text: 'Data', value: 'date' },
                 { text: 'Estado da Reserva', value: 'status' },
                 { text: 'Mensagem', value: 'message' },            
@@ -133,12 +133,48 @@ export default {
     
     async created(){
      
-        
+
+
     let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"))
-   await this.$store.dispatch("get_user_notifications",{
+    await this.$store.dispatch("get_user_notifications",{
         idUser: loggedUser.idUser
     }).then(()=>{
-        this.notification = this.$store.getters.getUserNotifications
+
+
+
+        let notifications = []
+        notifications = this.$store.getters.getUserNotifications
+
+        
+
+        let restaurants = JSON.parse(sessionStorage.getItem("restaurants"))
+        //let restaurantNames = []
+
+        for(let i = 0; i < notifications.length;i++){
+
+            let restaurantName = ""
+
+            restaurants.find((restaurant)=>{
+                if(restaurant.idRestaurant == notifications[i].idRestaurant){
+                    restaurantName = restaurant.name
+                }
+            })
+
+            this.notification.push({
+                idNotification:notifications[i].idNotification,
+                idUser:notifications[i].idUser,
+                idRestaurant:notifications[i].idRestaurant,
+                status:notifications[i].status,
+                message:notifications[i].message,
+                dateTime:notifications[i].dateTime,
+                read:notifications[i].read,
+                restaurantName: restaurantName
+            })
+
+            
+        }
+
+        console.log("notifications result: ", this.notification)
     }).catch((error)=>{
         console.log("Error in getting user notifications",error)
     })
@@ -164,8 +200,8 @@ export default {
         
         getColor(status){
 
-            if (status == "A ser Comfirmado...") return 'orange lighten-1'
-            else if(status =="Reserva Comfirmada!") return 'green lighten-1'       
+            if (status == "A ser confirmado") return 'orange lighten-1'
+            else if(status =="Reserva Confirmada") return 'green lighten-1'       
             else return 'red lighten-1' 
         },
 

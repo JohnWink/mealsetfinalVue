@@ -49,6 +49,7 @@
         ></v-textarea>
       </v-col>
       <v-col cols="10" sm="3">
+        <!--
         <v-overflow-btn
           class="mt-10 ml-4"
           color="#5C6BC0"
@@ -57,6 +58,7 @@
           label="Filtros"
           v-model="filterValue"
         ></v-overflow-btn>
+        -->
       </v-col>
     </v-row>
 
@@ -115,10 +117,21 @@ export default {
     searchValue: "",
     filterValue: "",
     search: "",
+    ratings:[]
   }),
 
   async created() {
 
+    //this.getCurrentLocation();
+
+    window.addEventListener("resize", this.mobileAjust);
+    this.mobileAjust();
+  },
+
+
+  async beforeCreate(){
+    //this.calcDistance();
+    
       await this.$store.dispatch('getRestaurants',{
 
       }).then(()=>{
@@ -131,19 +144,20 @@ export default {
 
       })
 
-    //this.getCurrentLocation();
+    await this.$store.dispatch("get_ratings").then(()=>{
 
-    window.addEventListener("resize", this.mobileAjust);
-    this.mobileAjust();
+     console.log("ratings created")
+
+      
+    }).catch((error)=>{
+      console.log("error in getting restaurant ratings: ", error)
+    })
+
   },
 
-/*
-  beforeMount(){
-    this.calcDistance();
-  },
-*/
 
   computed: {
+    
     sortedRestaurants() {
       if (this.filterValue == "Melhor Rating") {
         this.$store.getters.getRestaurantsByRating;
@@ -164,6 +178,7 @@ export default {
         return this.restaurants;
       }
     }
+    
   },
   methods: {
     mobileAjust() {

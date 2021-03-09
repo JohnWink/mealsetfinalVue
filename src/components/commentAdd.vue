@@ -57,8 +57,7 @@ export default {
     //rules for comment/evaluation submitions
 
     commentRules:[
-        v => !!v || 'Por favor preencha escreva a sua experiencia',
-        v => (v && v.length >= 50) || 'Tem de ter mais de 50 caracteres',
+        v => !!v || 'Por favor descreva a sua experiencia',
     ],
 
     //the user id and restaurant id will be needed
@@ -72,9 +71,24 @@ export default {
       //method when clicked on the button
       async submit(){
           
+              this.$fire({
+                title:"A publicar avaliação",
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showCancelButton: false,
+                showConfirmButton:false,         
+               })
 
-             let setDate = new Date()
-             let postDate = setDate.getFullYear() + "-" +setDate.getMonth() +"-"+setDate.getDay() +"  "+ setDate.getHours()+ ":" + setDate.getMinutes() + ":" + setDate.getSeconds()
+            let date = new Date()
+           
+
+       
+            let postDate = date.getUTCFullYear() + '-' +
+                            ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+                            ('00' + date.getUTCDate()).slice(-2) + ' ' + 
+                            ('00' + date.getUTCHours()).slice(-2) + ':' + 
+                            ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
+                            ('00' + date.getUTCSeconds()).slice(-2);
 
             
                 if (this.$refs.commentSection.validate()) {

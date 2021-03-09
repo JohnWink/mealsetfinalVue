@@ -38,12 +38,12 @@
                     :headers="headersReservation"                    
                     :items="reservations"                    
                     :single-select="singleSelect"
-                    item-key="id"
+                    item-key="idReservation"
                     show-select
                     class="elevation-1"
                     >
                     <!--Condition to change status to a string and give color chips -->
-                    <template v-slot:item.status="{ item }">
+                    <template v-slot:item.confirmed="{ item }">
                         <v-chip :color="getColor(item.confirmed)" dark> {{ item.confirmed }}</v-chip>
                     </template>
 
@@ -177,7 +177,6 @@ export default {
                 
                 { text: 'Nome', value: 'name' },
                 { text: 'Data', value: 'dateTime' },
-                { text: 'Hora', value: 'dateTime' },
                 { text: 'Numero de Pessoas', value: 'n_people' },
                 { text: 'Estado da Reserva', value:'confirmed' },
                 
@@ -191,9 +190,9 @@ export default {
                 { text: 'Imagem', value: 'foto' },
                 //{ text: 'Tipo de Prato', value: 'tag' },
                 { text: 'Descrição', value: 'description' },
-                {text:'Preço', value:'price'}
+                {text:'Preço', value:'price'},
                 //{ text: 'Avaliação', value: 'evaluation' },
-                //{ text: 'Recomendado', value: 'recommended'}
+                { text: 'Recomendado', value: 'recommended'}
                 
             ],
             reservations: [],
@@ -250,8 +249,8 @@ export default {
        
         getColor(status){
 
-            if (status == "A ser Confirmado...") return 'orange lighten-1'
-            else if(status =="Reserva Confirmada!") return 'green lighten-1'       
+            if (status == "A ser confirmado") return 'orange lighten-1'
+            else if(status == "Reserva Confirmada") return 'green lighten-1'       
             else return 'red lighten-1' 
         },
 
