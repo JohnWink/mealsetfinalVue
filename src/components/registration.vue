@@ -73,6 +73,7 @@
         <!--Imagem de perfil-->
          <v-file-input
           label="Link de Avatar(opcional)"
+          accept="image/*"
           v-model="userAvatar"
           filled
           prepend-icon="mdi-camera"
@@ -338,9 +339,24 @@ export default {
 
                  if(response == 201){
 
-                   console.log(this.userAvatar)
-                  if(this.userAvatar.length != 0){
-                    console.log("User avatar has been detected")
+   
+                  if(!this.userAvatar){
+                    
+                      this.$fire({
+                          type: "success",
+                          title: 'Registado!',
+                          text: 'Um link foi enviado para o seu email para ativar a sua conta',
+                          }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            })
+                    
+                  }else{
+                       
+                        
+                          //this.$refs.form.reset()
+
+                          console.log("User avatar has been detected")
 
                     await this.$store.dispatch('uploadAvatar',{
 
@@ -406,19 +422,6 @@ export default {
                             })
                         }
                       })
-
-                    
-                  }else{
-                       
-                          this.$fire({
-                          type: "success",
-                          title: 'Registado!',
-                          text: 'Um link foi enviado para o seu email para ativar a sua conta',
-                          }).then((result) => {
-                                if (result.value) {
-                                location.reload();}
-                            })
-                          //this.$refs.form.reset()
                   }
                 
                 }else if(response ==409){
@@ -445,13 +448,13 @@ export default {
 
               }).catch((error)=>{
                 console.log(error)
-                /*
+                
                  this.$fire({
                   type: "error",
                   title: 'Oops...!',
                   text: 'Algo deu errado',
                 })
-                */
+                
               })
 
               //this.$store.state.feedback = "";

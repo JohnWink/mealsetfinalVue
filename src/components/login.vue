@@ -156,12 +156,14 @@ export default {
        }).catch((error)=>{
           
            console.log(error)
-      
+          
+           
             this.$fire({
                 type: "error",
                 title: 'Oops...!',
                 text: 'Algo deu errado',
             })
+        
            //console.log("error status")
        })
 

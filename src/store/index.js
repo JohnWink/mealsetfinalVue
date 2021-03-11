@@ -344,7 +344,7 @@ export default new Vuex.Store({
       
       
 
-      await axios.post("https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/signUp",params).then((response)=>{
+      await axios.post("https://mealset.herokuapp.com/signUp",params).then((response)=>{
 
 
 
@@ -377,7 +377,7 @@ export default new Vuex.Store({
 
      await axios({
       method:'put',
-      url:`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/users/${idUser}/upload`,
+      url:`https://mealset.herokuapp.com/users/${idUser}/upload`,
       data:bodyFormData,
       headers:{'Content-Type': 'multipart/form-data'
       }}).then((response)=>{
@@ -387,6 +387,7 @@ export default new Vuex.Store({
 
       }).catch((error)=>{
         console.log("Error in avatar:", error.response)
+        commit("CREATE_FEEDBACK",error.response.status)
       })
     },
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++LOGIN +++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -397,20 +398,21 @@ export default new Vuex.Store({
       params.append('username', payload.username);
       params.append('password',payload.password);
 
-      await axios.post("https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/login",params).then((response)=>{
+      await axios.post("https://mealset.herokuapp.com/login",params).then((response)=>{
 
       console.log("Response status: ",response.status)
       console.log("Response auth status:",response.data.auth)
       console.log("Response auth data:",response.data.token)
       console.log("Usertype", response.data.userType)
-
+      console.log("response: ", response.status)
       commit("CREATE_FEEDBACK", response.status)
 
       commit("CREATE_LOGGED_USER", response.data)
 
       }).catch((error)=>{
 
-        console.log("error in logging in", error.response)
+        console.log("error in logging", error)
+      
         commit("CREATE_FEEDBACK",error.response.status)
       })
 
@@ -425,7 +427,7 @@ export default new Vuex.Store({
       params.append('contact', payload.contact)
       params.append('diet', payload.diet)
 
-      await axios.put(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/users/${payload.idUser}`, params).then((response)=>{
+      await axios.put(`https://mealset.herokuapp.com/users/${payload.idUser}`, params).then((response)=>{
 
         commit("CREATE_FEEDBACK",response.status)
 
@@ -449,7 +451,7 @@ export default new Vuex.Store({
       params.append('newPassword', payload.newPassword);
 
       
-      await axios.put(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/users/${payload.idUser}/newPassword`,params).then((response)=>{
+      await axios.put(`https://mealset.herokuapp.com/users/${payload.idUser}/newPassword`,params).then((response)=>{
 
         console.log("Response:" ,response.status)
         console.log("Data:", response.data.success)
@@ -475,7 +477,7 @@ export default new Vuex.Store({
       params.append('zipCode', payload.zipCode);
   
 
-      await axios.post("https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants",params).then((response)=>{
+      await axios.post("https://mealset.herokuapp.com/restaurants",params).then((response)=>{
 
         console.log("Response:" ,response.status)
         console.log("Data:", response.data.success)
@@ -508,7 +510,7 @@ export default new Vuex.Store({
 
      await axios({
       method:'put',
-      url:`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${idRestaurant}/upload`,
+      url:`https://mealset.herokuapp.com/restaurants/${idRestaurant}/upload`,
       data:bodyFormData,
       headers:{'Content-Type': 'multipart/form-data'
       }}).then((response)=>{
@@ -526,7 +528,7 @@ export default new Vuex.Store({
     async getRestaurants({commit}){
       await axios({
         method:'get',
-        url:'https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants'
+        url:'https://mealset.herokuapp.com/restaurants'
       }).then((response)=>{
 
         console.log("Get restaurants result: ", response.data.success)
@@ -549,7 +551,7 @@ export default new Vuex.Store({
 
       await axios({
         method:'get',
-        url:`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${idRestaurant}/ratings`
+        url:`https://mealset.herokuapp.com/restaurants/${idRestaurant}/ratings`
       }).then((response)=>{
 
         console.log("Get Ratings result: ", response.data.success)
@@ -572,7 +574,7 @@ export default new Vuex.Store({
       await axios({
 
         method:'get',
-        url:`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/users/${idUser}`
+        url:`https://mealset.herokuapp.com/users/${idUser}`
 
       }).then((response)=>{
 
@@ -605,7 +607,7 @@ export default new Vuex.Store({
       
 
 
-      await axios.post(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${idRestaurant}/users/${idUser}/ratings`,params).then((response)=>{
+      await axios.post(`https://mealset.herokuapp.com/restaurants/${idRestaurant}/users/${idUser}/ratings`,params).then((response)=>{
 
         //console.log("Get a User result:", response.data.success)
         commit("CREATE_FEEDBACK",response.status)
@@ -620,7 +622,7 @@ export default new Vuex.Store({
     },
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++Get Dishes++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     async getDishes({commit},payload){
-      await axios.get(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${payload.idRestaurant}/plates`).then((response)=>{
+      await axios.get(`https://mealset.herokuapp.com/restaurants/${payload.idRestaurant}/plates`).then((response)=>{
           //console.log("Get a User result:", response.data.success)
           commit("CREATE_FEEDBACK",response.status)
 
@@ -639,7 +641,7 @@ export default new Vuex.Store({
 
 
     
-    await axios.get(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${payload.idRestaurant}/tables`).then((response)=>{
+    await axios.get(`https://mealset.herokuapp.com/restaurants/${payload.idRestaurant}/tables`).then((response)=>{
       
     commit("CREATE_FEEDBACK",response.status)
 
@@ -674,7 +676,7 @@ export default new Vuex.Store({
 
 
 
-    await axios.post(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/tables/${idTable}/users/${idUser}/reservations`, params).then((response)=>{
+    await axios.post(`https://mealset.herokuapp.com/tables/${idTable}/users/${idUser}/reservations`, params).then((response)=>{
       
     commit("CREATE_FEEDBACK",response.status)
 
@@ -692,7 +694,7 @@ export default new Vuex.Store({
   async get_restaurant_reservations({commit},payload){
       const idRestaurant = payload.idRestaurant
 
-      await axios.get(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${idRestaurant}/reservations`).then((response)=>{
+      await axios.get(`https://mealset.herokuapp.com/restaurants/${idRestaurant}/reservations`).then((response)=>{
         
         commit("CREATE_FEEDBACK",response.status)
         commit("CREATE_RESTAURANT_RESERVATIONS",response.data.success)
@@ -710,7 +712,7 @@ export default new Vuex.Store({
 
     const idRestaurant = payload.idRestaurant
     console.log("Before the request of get_restaurant_dishes: ", payload.idRestaurant)
-    await axios.get(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${idRestaurant}/plates`).then((response)=>{
+    await axios.get(`https://mealset.herokuapp.com/restaurants/${idRestaurant}/plates`).then((response)=>{
           
       commit("CREATE_FEEDBACK",response.status)
       commit("CREATE_RESTAURANT_DISHES",response.data.success)
@@ -725,7 +727,7 @@ export default new Vuex.Store({
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Remove dish +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   async remove_dish({commit},payload){
-    await axios.delete(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/plates/${payload.idDish}`).then((response)=>{
+    await axios.delete(`https://mealset.herokuapp.com/plates/${payload.idDish}`).then((response)=>{
           
       commit("CREATE_FEEDBACK",response.status)
  
@@ -739,7 +741,7 @@ export default new Vuex.Store({
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Remove Restaurant Reservations++++++++++++++++++++++++++++++++++++++++++++++
   async delete_restaurant_reservations({commit},payload){
     
-    await axios.delete(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${payload.idRestaurant}/reservations`).then((response)=>{
+    await axios.delete(`https://mealset.herokuapp.com/restaurants/${payload.idRestaurant}/reservations`).then((response)=>{
           
       commit("CREATE_FEEDBACK",response.status)
 
@@ -761,7 +763,7 @@ export default new Vuex.Store({
     params.append('price',payload.price)
     params.append('recommended', payload.recommended)
 
-    await axios.post(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${payload.idRestaurant}/plates`, params).then((response)=>{
+    await axios.post(`https://mealset.herokuapp.com/restaurants/${payload.idRestaurant}/plates`, params).then((response)=>{
           
       commit("CREATE_FEEDBACK",response.status)
       console.log("last dish id: ", response.data.success)
@@ -784,7 +786,7 @@ export default new Vuex.Store({
 
      await axios({
       method:'put',
-      url:`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/plates/${payload.idDish}/upload`,
+      url:`https://mealset.herokuapp.com/plates/${payload.idDish}/upload`,
       data:bodyFormData,
       headers:{'Content-Type': 'multipart/form-data'
       }}).then((response)=>{
@@ -814,7 +816,7 @@ export default new Vuex.Store({
 
      await axios({
       method:'put',
-      url:`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${idRestaurant}/uploadCover`,
+      url:`https://mealset.herokuapp.com/restaurants/${idRestaurant}/uploadCover`,
       data:bodyFormData,
       headers:{'Content-Type': 'multipart/form-data'
       }}).then((response)=>{
@@ -842,7 +844,7 @@ export default new Vuex.Store({
 
    await axios({
     method:'put',
-    url:`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${idRestaurant}/uploadCover`,
+    url:`https://mealset.herokuapp.com/restaurants/${idRestaurant}/uploadCover`,
     data:bodyFormData,
     headers:{'Content-Type': 'multipart/form-data'
     }}).then((response)=>{
@@ -866,7 +868,7 @@ export default new Vuex.Store({
 
 
 
-    await axios.put(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/reservations/${payload.id}/confirm`, params).then((response)=>{
+    await axios.put(`https://mealset.herokuapp.com/reservations/${payload.id}/confirm`, params).then((response)=>{
       
     commit("CREATE_FEEDBACK",response.status)
 
@@ -891,7 +893,7 @@ export default new Vuex.Store({
 
 
 
-    await axios.post(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/restaurants/${payload.idRestaurant}/users/${payload.idUser}/notifications`, params).then((response)=>{
+    await axios.post(`https://mealset.herokuapp.com/restaurants/${payload.idRestaurant}/users/${payload.idUser}/notifications`, params).then((response)=>{
       
     commit("CREATE_FEEDBACK",response.status)
 
@@ -908,7 +910,7 @@ export default new Vuex.Store({
 
   async get_user_notifications({commit},payload){
 
-     await axios.get(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/users/${payload.idUser}/notifications`).then((response)=>{
+     await axios.get(`https://mealset.herokuapp.com/users/${payload.idUser}/notifications`).then((response)=>{
       
     commit("CREATE_FEEDBACK",response.status)
 
@@ -924,7 +926,7 @@ export default new Vuex.Store({
 
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Get Ratings+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   async get_ratings({commit}){
-    await axios.get(`https://cors-anywhere.herokuapp.com/mealset.herokuapp.com/ratings`).then((response)=>{
+    await axios.get(`https://mealset.herokuapp.com/ratings`).then((response)=>{
       
       commit("CREATE_FEEDBACK",response.status)
   
