@@ -114,6 +114,16 @@ export default {
                                 location.reload();}
                             });
 
+                        }else if(response ==409){
+                            this.$fire({
+                            title: "O comentário já existe!",          
+                            type: "error",
+                            text:"Não pode comentar mais do que uma vez",
+                            confirmButtonText: "ok"
+                            }).then((result) => {
+                                if (result.value) {
+                                location.reload();}
+                            });
                         }else{
                             this.$fire({
                             title: "Oops!",          

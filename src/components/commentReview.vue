@@ -4,17 +4,17 @@
             <v-card id="comment" elevation="4" class="my-2">
                 <v-row  justify="space-between" align="center" id="comment" >
 
-                    <v-col cols="7"  class="mx-4">
+                    <v-col cols="12"  class="mx-4">
                         <v-avatar size="60">
                             <v-img  :src="user.avatar"
                                 alt="user"/>
                         </v-avatar>                
-                        <span class="pl-2"><b>{{user.name}}  </b>{{commentDate}}</span>
+                        <span class="pl-2"><b>{{user.name}}  </b>{{commentDate}} </span>
                     </v-col>
 
                     <!--method to calculate and print the rate stars and empthy stars-->
-                    <v-col  cols="3" sm="3">
-                        <div v-html="rateprint(rating.value)"></div>
+                    <v-col  cols="2" sm="3">
+                        <div v-html="rateprint(rating.rating)"></div>
                     </v-col>
 
                     <v-col cols="12">
@@ -77,8 +77,10 @@ export default {
             }).then(()=>{
 
             this.user = this.$store.getters.getUserDetails
-
-                
+            console.log("user: ", this.user)
+            if(this.user.avatar == null){
+                this.user.avatar = "https://i.imgur.com/6txmFi3.png"
+            }
 
 
                 
@@ -86,9 +88,9 @@ export default {
                 console.log("Error in getting a user in comments:", error)
         })
 
-        console.log(this.rating.datetime)
+        console.log(this.rating.dateTime)
         //var t = this.rating.dateTime.split(/[- :]/)
-        
+        console.log(this.rating)
         let date = new Date(this.rating.dateTime)
 
         var dd = date.getDate();
