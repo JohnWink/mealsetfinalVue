@@ -339,7 +339,7 @@ export default {
 
                  if(response == 201){
 
-   
+                  console.log("Avatar: ", this.userAvatar)
                   if(!this.userAvatar){
                     
                       this.$fire({
