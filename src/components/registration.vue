@@ -71,14 +71,20 @@
       
 
         <!--Imagem de perfil-->
-         <v-file-input
+         <!-- <v-file-input
           label="Link de Avatar(opcional)"
           accept="image/*"
           v-model="userAvatar"
           filled
           prepend-icon="mdi-camera"
           color="#5C6BC0"
-         ></v-file-input>
+         ></v-file-input> -->
+         
+         <v-text-field
+          label="Link de avatar(opcional)"
+          v-model="userAvatarLink"
+          prepend-icon="mdi-camera"
+          color="#5C6BC0"></v-text-field>
 
         <v-checkbox
         v-model="checkbox"        
@@ -208,7 +214,8 @@ export default {
     password: "",
     contact: 0,
     email: "",
-    userAvatar:[],
+    //userAvatar:[],
+    userAvatarLink:"",
     userType: "",
     //zipCode: 0,
     id: 0,
@@ -333,14 +340,15 @@ export default {
 
                 
                const lastUserId = this.$store.getters.getLastUserId
+               console.log("AVATAR:" + this.userAvatarLink)
                let response =  this.$store.getters.feedbackChecker;
               
                 console.log("Axios response:", response)
 
                  if(response == 201){
 
-                  console.log("Avatar: ", this.userAvatar)
-                  if(!this.userAvatar){
+                  console.log("Avatar: ", this.userAvatarLink)
+                  if(!this.userAvatarLink){
                     
                       this.$fire({
                           type: "success",
@@ -361,11 +369,12 @@ export default {
                     await this.$store.dispatch('uploadAvatar',{
 
                       idUser: lastUserId,
-                      avatar:this.userAvatar
+                      avatar:this.userAvatarLink
 
                       }).then(()=>{
 
                         response = this.$store.getters.feedbackChecker
+                        console.log("AVATAR:" + this.userAvatarLink)
 
                         if(response == 200){
 

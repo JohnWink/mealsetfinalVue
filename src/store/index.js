@@ -347,7 +347,7 @@ export default new Vuex.Store({
       await axios.post("https://mealset.herokuapp.com/signUp",params).then((response)=>{
 
 
-
+      
       console.log(response.status)  
       console.log(response.data.success)
 
@@ -370,7 +370,7 @@ export default new Vuex.Store({
     async uploadAvatar({commit},payload){
       const avatar = payload.avatar
       const idUser = payload.idUser
-
+      console.log("AVATAR: " + avatar)
       var bodyFormData = new FormData()
 
       bodyFormData.append('avatar',avatar)
