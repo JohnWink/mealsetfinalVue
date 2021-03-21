@@ -55,16 +55,20 @@
                 
                 <v-row class="pl-6 ml-6 mr-6 mt-3"  align="center" justify="center" justify-sm="space-between">
                    
-                   <v-col cols="12" sm="2">
+                   <v-col cols="4" sm="2">
                        <v-btn v-on:click="tableMode = false" large rounded color="indigo lighten-1" class="white--text">Pratos</v-btn>
                    </v-col>
 
-                   <v-col cols="12" sm="6">
+                     <v-col cols="4" sm="2">
+                       <addTable/>
+                   </v-col>
+
+                   <v-col cols="4" sm="4">
                        <ChangeStatusRes v-if="this.selected.length!== 0" :selected="this.selected[0]" />  
                         <v-btn v-else large rounded  disabled>Mudar estado da Reserva</v-btn> 
                    </v-col>
                 
-                    <v-col cols="12" sm="3">
+                    <v-col cols="4" sm="3">
                        <v-btn  large rounded color="red" class="white--text" @click="deleteReserves()"> Limpar todas as Reservas </v-btn>
                    </v-col>
                 </v-row>
@@ -148,6 +152,7 @@
     import perfil from "@/components/perfil.vue";
     import ChangeStatusRes from "@/components/ChangeStatusReservation.vue"
     import addDish from "@/components/AddDish.vue";
+    import addTable from "@/components/addTable.vue"
 
 export default {
 
@@ -160,7 +165,8 @@ export default {
         Logout,
         perfil,
         ChangeStatusRes,
-        addDish
+        addDish,
+        addTable
     },
     data () {
         
@@ -217,8 +223,8 @@ export default {
 
     async beforeCreate(){
 
-        this.loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"))
-
+         this.loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"))
+        let loggedUser = this.loggedUser
         console.log("before create logged user id Restaurant: ", this.loggedUser.idRestaurant)
 
         await this.$store.dispatch("get_restaurant_reservations",{
@@ -233,7 +239,7 @@ export default {
 
         this.loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"))
         await this.$store.dispatch("get_restaurant_dishes",{
-            idRestaurant:this.loggedUser.idRestaurant
+            idRestaurant:loggedUser.idRestaurant
         }).then(()=>{
 
              this.dishes = this.$store.getters.getRestaurantDishes

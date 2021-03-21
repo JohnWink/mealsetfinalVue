@@ -13,7 +13,7 @@
                     </v-col>
 
                     <!--method to calculate and print the rate stars and empthy stars-->
-                    <v-col  cols="2" sm="3">
+                    <v-col  cols="12" sm="6">
                         <div v-html="rateprint(rating.rating)"></div>
                     </v-col>
 

@@ -67,25 +67,27 @@
           clearable
           color="#5C6BC0"
         ></v-text-field>
-
-      
+        <!--
+        <v-text-field
+          label="Link de avatar(opcional)"
+          v-model="userAvatarLink"
+          prepend-icon="mdi-camera"
+          color="#5C6BC0"
+        ></v-text-field>
+      -->
 
         <!--Imagem de perfil-->
-         <!-- <v-file-input
+         <v-file-input
           label="Link de Avatar(opcional)"
           accept="image/*"
           v-model="userAvatar"
           filled
           prepend-icon="mdi-camera"
           color="#5C6BC0"
-         ></v-file-input> -->
+         ></v-file-input>
          
-         <v-text-field
-          label="Link de avatar(opcional)"
-          v-model="userAvatarLink"
-          prepend-icon="mdi-camera"
-          color="#5C6BC0"></v-text-field>
-
+    
+        
         <v-checkbox
         v-model="checkbox"        
         label="Registar como restaurante utilizador?"        
@@ -214,8 +216,8 @@ export default {
     password: "",
     contact: 0,
     email: "",
-    //userAvatar:[],
-    userAvatarLink:"",
+    userAvatar:[],
+    //userAvatarLink: "",
     userType: "",
     //zipCode: 0,
     id: 0,
@@ -303,7 +305,7 @@ export default {
   methods: {
 
     async signUpUser(){
-      
+              let avatar = this.userAvatar
                this.$fire({
                 title:"Registando Utilizador...",
                 allowEscapeKey: false,
@@ -323,7 +325,11 @@ export default {
                   //lastRestaurantId = null
                   userTypeInfo = "restaurante"
                 }
-             
+              console.log("username:" + this.username)
+            
+              
+          
+
                await this.$store.dispatch('signUpUser',{
                       
                 username:this.username,
@@ -335,22 +341,20 @@ export default {
                 userType: userTypeInfo
 
                }).then(async()=>{
-
-                 
-
                 
                const lastUserId = this.$store.getters.getLastUserId
-               console.log("AVATAR:" + this.userAvatarLink)
+               console.log("AVATAR:" + avatar)
                let response =  this.$store.getters.feedbackChecker;
-              
+
                 console.log("Axios response:", response)
 
                  if(response == 201){
-
-                  console.log("Avatar: ", this.userAvatarLink)
-                  if(!this.userAvatarLink){
-                    
-                      this.$fire({
+                   
+                   
+                  
+                  console.log("Avatar: ", avatar)
+                  if(avatar === []){
+                    this.$fire({
                           type: "success",
                           title: 'Registado!',
                           text: 'Um link foi enviado para o seu email para ativar a sua conta',
@@ -358,23 +362,23 @@ export default {
                                 if (result.value) {
                                 location.reload();}
                             })
-                    
                   }else{
                        
                         
                           //this.$refs.form.reset()
 
-                          console.log("User avatar has been detected")
+                      console.log("User avatar has been detected")
 
                     await this.$store.dispatch('uploadAvatar',{
 
                       idUser: lastUserId,
-                      avatar:this.userAvatarLink
+                      avatar:avatar
 
                       }).then(()=>{
 
                         response = this.$store.getters.feedbackChecker
-                        console.log("AVATAR:" + this.userAvatarLink)
+                       
+                         
 
                         if(response == 200){
 
@@ -533,7 +537,8 @@ export default {
               
           // If Restaurant SignUp
           }else if(this.checkbox ===true){
-
+            let coverImg = this.coverImg
+            let logoImg = this.logoImg
             let booleanParking = 0
 
             if(this.parking==true){
@@ -555,8 +560,8 @@ export default {
                 description: this.restaurantDescrip,
                 parking : booleanParking,
                 address:this.restaurantLocation,
-                zipCode: this.restaurantZipCode
-
+                zipCode: this.restaurantZipCode,
+      
                }).then(async()=>{
 
 
@@ -566,10 +571,22 @@ export default {
 
                 if(response == 201){
 
+                    this.$fire({
+                                  title:"Registando Utilizador...",
+                                  allowEscapeKey: false,
+                                  allowOutsideClick: false,
+                                  showCancelButton: false,
+                                  showConfirmButton:false,         
+                                 })
+
+                              //Signup User Begins here
+                              this.signUpUser()
+                              // User signup ends here
+
                  await this.$store.dispatch('uploadRestaurantImages',{
 
-                    coverImg:this.coverImg,
-                    logoImg: this.logoImg,
+                    coverImg:coverImg,
+                    logoImg: logoImg,
                     lastRestaurantId: lastRestaurantId
 
                   }).then(async()=>{

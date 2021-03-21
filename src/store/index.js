@@ -15,7 +15,7 @@ export default new Vuex.Store({
     restaurants:[],
     restaurantRatings:[],
     feedback:'',
-
+    avatar:'',
     loggedUser:{
       idUser:'',
       username:'',
@@ -79,6 +79,10 @@ export default new Vuex.Store({
 
     state.feedback = payload
 
+   },
+
+   SAVE_AVATAR(state,payload){
+    state.avatar = payload
    },
 
    LOGOUT(){
@@ -329,11 +333,16 @@ export default new Vuex.Store({
     async signUpUser({commit},payload){
 
       const params = new URLSearchParams();
+     
 
       if(payload.idRestaurant != ''){
         console.log("Sending idRestaurant as: ", payload.idRestaurant)
         params.append('idRestaurant', payload.idRestaurant)
       }
+
+
+
+
       params.append('username', payload.username);
       params.append('password',payload.password);
       params.append('email', payload.email);
@@ -341,10 +350,15 @@ export default new Vuex.Store({
      // params.append('zipCode',payload.zipCode);
       params.append('userType',payload.userType);
 
+
       
       
 
-      await axios.post("https://mealset.herokuapp.com/signUp",params).then((response)=>{
+      await axios.post("https://mealset.herokuapp.com/signUp",params,{
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).then((response)=>{
 
 
       
@@ -370,14 +384,29 @@ export default new Vuex.Store({
     async uploadAvatar({commit},payload){
       const avatar = payload.avatar
       const idUser = payload.idUser
-      console.log("AVATAR: " + avatar)
+   
+
       var bodyFormData = new FormData()
 
       bodyFormData.append('avatar',avatar)
 
+
+
+      await axios({method:'put',
+      url:`https://mealset.herokuapp.com/users/${idUser}/upload`,
+      data:bodyFormData,
+      headers:{'Content-Type': 'multipart/form-data'}
+      }).then((response)=>{
+        commit("CREATE_FEEDBACK",response.status)
+        console.log("Feedback of upload avatar:" ,response.status)
+      }).catch((error)=>{
+        console.log("Error in avatar:", error.response)
+        commit("CREATE_FEEDBACK",error.response.status)
+      })
+    /*
      await axios({
       method:'put',
-      url:`https://mealset.herokuapp.com/users/${idUser}/upload`,
+      url:`https://mealset.herokuapp.com/users/${idUser}/linkUpload`,
       data:bodyFormData,
       headers:{'Content-Type': 'multipart/form-data'
       }}).then((response)=>{
@@ -389,6 +418,7 @@ export default new Vuex.Store({
         console.log("Error in avatar:", error.response)
         commit("CREATE_FEEDBACK",error.response.status)
       })
+      */
     },
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++LOGIN +++++++++++++++++++++++++++++++++++++++++++++++++++
     async login({commit},payload){
@@ -608,6 +638,40 @@ export default new Vuex.Store({
 
 
       await axios.post(`https://mealset.herokuapp.com/restaurants/${idRestaurant}/users/${idUser}/ratings`,params).then((response)=>{
+
+        //console.log("Get a User result:", response.data.success)
+        commit("CREATE_FEEDBACK",response.status)
+
+      }).catch((error)=>{
+        
+        commit("CREATE_FEEDBACK",error.response.status)
+
+        console.log("Error in getting a comment:", error)
+
+      })
+    },
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ADD TABLE +++++++++++++++++++++++++++++++++++++++++++++
+
+    async add_table({commit},payload){
+
+      const name = payload.name
+      const size = payload.size
+      const description = payload.description
+      const smoking = payload.smoking
+      const outside = payload.outside
+      const idRestaurant = payload.idRestaurant
+
+      const params = new URLSearchParams();
+
+      params.append('name',name)
+      params.append('size',size)
+      params.append('description',description)
+      params.append('smoking',smoking)
+      params.append('outside',outside)
+
+
+      await axios.post(`https://mealset.herokuapp.com/restaurants/${idRestaurant}/tables`,params).then((response)=>{
 
         //console.log("Get a User result:", response.data.success)
         commit("CREATE_FEEDBACK",response.status)
@@ -949,6 +1013,8 @@ export default new Vuex.Store({
 
 
     checkUserType:state => state.loggedUser.userType,
+
+    getAvatar : state =>state.avatar,
 
     feedbackChecker:state=> state.feedback,
 

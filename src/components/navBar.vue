@@ -183,9 +183,9 @@ export default {
 
   async beforeMount(){
 
-
-  let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"))
   
+  let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"))
+  this.idNumber = loggedUser.idRestaurant
    await this.$store.dispatch("get_user_notifications",{
         idUser: loggedUser.idUser
     }).then(()=>{
